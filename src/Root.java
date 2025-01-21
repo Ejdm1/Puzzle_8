@@ -94,7 +94,8 @@ public class Root {
             }
 
             for (int i = 0; i < 4; i++) {
-                if(min.layer >= 18) {
+                System.out.println("On layer: " + min.layer);
+                if(min.layer > 20) {
                     return null;
                 }
 

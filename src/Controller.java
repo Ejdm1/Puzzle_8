@@ -22,6 +22,8 @@ public class Controller {
 
     @FXML
     private Button generate;
+    @FXML
+    private Button cleanAll;
 
     @FXML
     private GridPane gridOutput;
@@ -40,46 +42,96 @@ public class Controller {
 // {7, 8, 4}
 
     public void initialize() {
-        layerList.setMinSize(100,300);
-        layerList.setMaxSize(100,300);
         generate.setStyle("-fx-font: 15 arial; -fx-border-color: black; -fx-background-color: transparent");
+        cleanAll.setStyle("-fx-font: 15 arial; -fx-border-color: black; -fx-background-color: transparent");
         labelOut.setStyle("-fx-font: 15 arial; -fx-border-color: black;");
-        labelOut.setPrefHeight(generate.getPrefHeight());
 
         generate.setOnAction(e -> addButton());
+        setComboBox();
+    }
+
+    public void clearAll() {
+        comboSet = false;
+        deleteButtons();
+        deleteLabels();
+        labelOut.setText("");
+        first = true;
+        for(int i = 0; i < 100; i++) {
+            for(int j = 0; j < 3; j++) {
+                for(int k = 0; k < 3; k++) {
+                    try {
+                        gridInput.getChildren().remove(scene.lookup("#comboBoxLable" + String.valueOf(j) + String.valueOf(k)));
+                    }
+                    catch(Exception e) {
+                        return;
+                    }
+                }
+            }
+        }
         setComboBox();
     }
 
     public void setComboBox() {
         for(int i = 0; i < 3; i++) {
             for(int j = 0; j < 3; j++) {
+                if(scene != null && scene.lookup("#comboBox" + String.valueOf(i) + String.valueOf(j)) != null) {
+                    gridInput.getChildren().remove((scene.lookup("#comboBox" + String.valueOf(i) + String.valueOf(j))));
+                }
                 ComboBox<Integer> comboBox = new ComboBox<Integer>();
-                comboBox.setMaxSize(50, 50);
-                comboBox.setMinSize(50, 50);
+                comboBox.setPrefSize(100, 100);
                 comboBox.setItems(FXCollections.observableArrayList(0,1,2,3,4,5,6,7,8));
                 comboBox.setId("comboBox" + String.valueOf(i) + String.valueOf(j));
                 comboBox.setOnAction(e -> showSelected(comboBox.getId()));
                 gridInput.add(comboBox, j , i);
+                Label label = new Label();
+                label.setId("comboBoxLable" + String.valueOf(i) + String.valueOf(j));
+                label.setMaxSize(98, 98);
+                label.setMinSize(98, 98);
+                label.setText("");
+                label.setStyle("-fx-font: 24 arial; -fx-background-color: white; -fx-border-color: black;");
+                label.setMouseTransparent(true);
+                label.setAlignment(Pos.CENTER);
+                gridInput.add(label, j, i);
+            }
+        }
+    }
+
+    public void setComboBoxDefault() {
+        comboSet = true;
+        int unsolvedMat2[][] = {
+            {1, 2, 3},
+            {5, 6, 0},
+            {7, 8, 4} 
+        };
+        for(int i = 0; i < 3; i++) {
+            for(int j = 0; j < 3; j++) {
+                ComboBox<Integer> comboBox = (ComboBox<Integer>)(scene.lookup("#comboBox" + String.valueOf(i) + String.valueOf(j)));
+                comboBox.setValue(unsolvedMat2[i][j]);
+                comboBox.setOnAction(e -> showSelected(comboBox.getId()));
+                showSelected("comboBox" + String.valueOf(i) + String.valueOf(j));
             }
         }
     }
 
     public void showSelected(String id) {
+        comboSet = true;
+        gridInput.getChildren().remove(scene.lookup("#comboBoxLable" + String.valueOf(id.substring(8, 9)) + String.valueOf(id.substring(9, 10))));
         Label label = new Label();
         label.setId("comboBoxLable" + String.valueOf(id.substring(8, 9)) + String.valueOf(id.substring(9, 10)));
-        label.setMaxSize(50, 50);
-        label.setMinSize(50, 50);
+        label.setMaxSize(98, 98);
+        label.setMinSize(98, 98);
         label.setText(String.valueOf(((ComboBox<Integer>)(scene.lookup("#" + id))).getValue()));
-        label.setStyle("-fx-font: 18 arial;");
+        label.setStyle("-fx-font: 24 arial; -fx-background-color: white; -fx-border-color: black;");
         label.setAlignment(Pos.CENTER);
         label.setMouseTransparent(true);
-        gridInput.getChildren().remove(scene.lookup("#comboBoxLable" + String.valueOf(id.substring(8, 9)) + String.valueOf(id.substring(9, 10))));
         gridInput.add(label, Integer.parseInt(id.substring(9, 10)), Integer.parseInt(id.substring(8, 9)));
     }
 
     // public void deleteComboBoxLabel(String id) {
     //     System.out.println(id);
     // }
+    boolean first = true;
+    boolean comboSet = false;
     int solveState = 0; // 1 = unsolvable, 0= solved, -1 = solvable but not by this algorithm
     public void solveMat(int[][] unsolvedMat) {
         int solvedMat[][] = {
@@ -87,32 +139,17 @@ public class Controller {
             {4, 5, 6},
             {7, 8, 0}
         };
-        boolean first = true;
+        if(!comboSet) {
+            setComboBoxDefault();
+            if(first) {
+                System.out.print("Default Mat set");first = false;
+            }
+        }
+
         for(int i = 0; i < Root.sizeOfMat; i++) {
             for(int j = 0; j < Root.sizeOfMat; j++) {
-                try {
-                    unsolvedMat[i][j] = Integer.parseInt(((Label)(scene.lookup("#comboBoxLable" + String.valueOf(i) + String.valueOf(j)))).getText());
-                    if(first) {
-                        System.out.print("Input Mat set");
-                        first = false;
-                    }
-                }
-                catch (Exception e) {
-                    int unsolvedMat2[][] = {
-                        {1, 2, 3},
-                        {5, 6, 0},
-                        {7, 8, 4}
-                    };
-                    for(int x = 0; x < unsolvedMat.length; x++) {
-                        for(int y = 0; y < unsolvedMat.length;y++) {
-                            unsolvedMat[x][y] = unsolvedMat2[x][y];
-                        }
-                    }
-                    if(first) {
-                        System.out.print("Default Mat set");
-                        first = false;
-                    }
-                }
+                unsolvedMat[i][j] = (int)((ComboBox)(scene.lookup("#comboBox" + String.valueOf(i) + String.valueOf(j)))).getValue();
+                if(first) {System.out.print("Input Mat set"); first = false;}
             }
         }
         first = true;
@@ -182,7 +219,7 @@ public class Controller {
             button.setPrefHeight(layerList.getHeight()/10);
             button.setMinHeight(10);
             button.setMaxHeight(30);
-            button.setStyle("-fx-font: 10 arial;");
+            button.setStyle("-fx-font: 15 arial; -fx-background-color: transparent; -fx-border-color: black");
             button.setId("button" + String.valueOf((i)));
             button.setOnAction(e -> showLayer(button.getId()));
             layerList.getChildren().add(button);
@@ -190,9 +227,12 @@ public class Controller {
     }
 
     public void deleteButtons() {
-        for(int i = 0; i < nodes.size(); i++) {
-            layerList.getChildren().remove(scene.lookup("#button" + String.valueOf(i)));
+        try {
+            for(int i = 0; i < 100; i++) {
+                layerList.getChildren().remove(scene.lookup("#button" + String.valueOf(i)));
+            }
         }
+        catch (Exception e) {}
     }
 
     public void showLayer(String id) {
@@ -206,10 +246,10 @@ public class Controller {
             for(int l = 0; l < 3; l++) {
                 Label label = new Label();
                 label.setId("label" + String.valueOf(k) + String.valueOf(l));
-                label.setMaxSize(100, 100);
-                label.setMinSize(100, 100);
+                label.setMaxSize(200, 200);
+                label.setMinSize(200, 200);
                 label.setText(String.valueOf(mat[l][k]));
-                label.setStyle("-fx-font: 24 arial;");
+                label.setStyle("-fx-font: 40 arial;");
                 label.setAlignment(Pos.CENTER);
                 gridOutput.add(label, k, l);
             }

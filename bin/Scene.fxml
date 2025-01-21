@@ -41,16 +41,16 @@
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
-<VBox maxHeight="320.0" maxWidth="750.0" minHeight="312.0" minWidth="572.0" prefHeight="312.0" prefWidth="572.0" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="Controller">
+<VBox maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="612.0" prefWidth="1024.0" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="Controller">
   <children>
-    <AnchorPane maxHeight="1080.0" maxWidth="1920.0" minHeight="307.0" minWidth="565.0" prefHeight="312.0" prefWidth="565.0" VBox.vgrow="ALWAYS">
+    <AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="612.0" prefWidth="1024.0" VBox.vgrow="ALWAYS">
          <children>
-            <Button fx:id="generate" layoutX="6.0" layoutY="161.0" mnemonicParsing="false" prefHeight="20.0" prefWidth="150.0" style="-fx-background-color: transparent; -fx-border-color: black;" text="Solve">
+            <Button fx:id="generate" layoutX="6.0" layoutY="311.0" mnemonicParsing="false" prefHeight="50.0" prefWidth="300.0" style="-fx-background-color: transparent; -fx-border-color: black;" text="Solve">
                <font>
                   <Font size="12.0" />
                </font>
             </Button>
-            <GridPane fx:id="gridOutput" layoutX="266.0" layoutY="6.0" maxHeight="300.0" maxWidth="300.0" minHeight="300.0" minWidth="300.0" prefHeight="300.0" prefWidth="300.0" style="-fx-border-color: black;" AnchorPane.topAnchor="6.0">
+            <GridPane fx:id="gridOutput" layoutX="266.0" layoutY="6.0" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="600.0" prefWidth="600.0" style="-fx-border-color: black;" AnchorPane.rightAnchor="6.0" AnchorPane.topAnchor="6.0">
               <columnConstraints>
                 <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
                 <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
@@ -62,55 +62,55 @@
                 <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
               </rowConstraints>
                <children>
-                  <Label fx:id="grid00" alignment="CENTER" maxHeight="100.0" maxWidth="100.0" minHeight="100.0" minWidth="100.0" prefHeight="100.0" prefWidth="100.0">
+                  <Label fx:id="grid00" alignment="CENTER" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="200.0" prefWidth="200.0">
                      <font>
                         <Font size="36.0" />
                      </font>
                   </Label>
-                  <Label fx:id="grid10" alignment="CENTER" maxHeight="100.0" maxWidth="100.0" minHeight="100.0" minWidth="100.0" prefHeight="100.0" prefWidth="100.0" GridPane.columnIndex="1">
+                  <Label fx:id="grid10" alignment="CENTER" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="200.0" prefWidth="200.0" GridPane.columnIndex="1">
                      <font>
                         <Font size="36.0" />
                      </font>
                   </Label>
-                  <Label fx:id="grid20" alignment="CENTER" maxHeight="100.0" maxWidth="100.0" minHeight="100.0" minWidth="100.0" prefHeight="100.0" prefWidth="100.0" GridPane.columnIndex="2">
+                  <Label fx:id="grid20" alignment="CENTER" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="200.0" prefWidth="200.0" GridPane.columnIndex="2">
                      <font>
                         <Font size="36.0" />
                      </font>
                   </Label>
-                  <Label fx:id="grid01" alignment="CENTER" maxHeight="100.0" maxWidth="100.0" minHeight="100.0" minWidth="100.0" prefHeight="100.0" prefWidth="100.0" GridPane.rowIndex="1">
+                  <Label fx:id="grid01" alignment="CENTER" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="200.0" prefWidth="200.0" GridPane.rowIndex="1">
                      <font>
                         <Font size="36.0" />
                      </font>
                   </Label>
-                  <Label fx:id="grid11" alignment="CENTER" maxHeight="100.0" maxWidth="100.0" minHeight="100.0" minWidth="100.0" prefHeight="100.0" prefWidth="100.0" GridPane.columnIndex="1" GridPane.rowIndex="1">
+                  <Label fx:id="grid11" alignment="CENTER" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="200.0" prefWidth="200.0" GridPane.columnIndex="1" GridPane.rowIndex="1">
                      <font>
                         <Font size="36.0" />
                      </font>
                   </Label>
-                  <Label fx:id="grid21" alignment="CENTER" maxHeight="100.0" maxWidth="100.0" minHeight="100.0" minWidth="100.0" prefHeight="100.0" prefWidth="100.0" GridPane.columnIndex="2" GridPane.rowIndex="1">
+                  <Label fx:id="grid21" alignment="CENTER" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="200.0" prefWidth="200.0" GridPane.columnIndex="2" GridPane.rowIndex="1">
                      <font>
                         <Font size="36.0" />
                      </font>
                   </Label>
-                  <Label fx:id="grid02" alignment="CENTER" maxHeight="100.0" maxWidth="100.0" minHeight="100.0" minWidth="100.0" prefHeight="100.0" prefWidth="100.0" GridPane.rowIndex="2">
+                  <Label fx:id="grid02" alignment="CENTER" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="200.0" prefWidth="200.0" GridPane.rowIndex="2">
                      <font>
                         <Font size="36.0" />
                      </font>
                   </Label>
-                  <Label fx:id="grid12" alignment="CENTER" maxHeight="100.0" maxWidth="100.0" minHeight="100.0" minWidth="100.0" prefHeight="100.0" prefWidth="100.0" GridPane.columnIndex="1" GridPane.rowIndex="2">
+                  <Label fx:id="grid12" alignment="CENTER" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="200.0" prefWidth="200.0" GridPane.columnIndex="1" GridPane.rowIndex="2">
                      <font>
                         <Font size="36.0" />
                      </font>
                   </Label>
-                  <Label fx:id="grid22" alignment="CENTER" maxHeight="100.0" maxWidth="100.0" minHeight="100.0" minWidth="100.0" prefHeight="100.0" prefWidth="100.0" GridPane.columnIndex="2" GridPane.rowIndex="2">
+                  <Label fx:id="grid22" alignment="CENTER" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="200.0" prefWidth="200.0" GridPane.columnIndex="2" GridPane.rowIndex="2">
                      <font>
                         <Font size="36.0" />
                      </font>
                   </Label>
                </children>
             </GridPane>
-            <VBox fx:id="layerList" layoutX="161.0" layoutY="6.0" prefHeight="300.0" prefWidth="100.0" style="-fx-padding: 3; -fx-border-color: black;" AnchorPane.topAnchor="6.0" />
-            <GridPane fx:id="gridInput" layoutX="6.0" layoutY="6.0" maxHeight="150.0" maxWidth="150.0" minHeight="150.0" minWidth="150.0" prefHeight="150.0" prefWidth="150.0" style="-fx-border-color: black;" AnchorPane.leftAnchor="6.0" AnchorPane.topAnchor="6.0">
+            <VBox fx:id="layerList" layoutX="312.0" layoutY="6.0" prefHeight="600.0" prefWidth="100.0" style="-fx-padding: 3; -fx-border-color: black;" />
+            <GridPane fx:id="gridInput" alignment="CENTER" layoutX="6.0" layoutY="6.0" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="300.0" prefWidth="300.0" style="-fx-border-color: black;" AnchorPane.leftAnchor="6.0" AnchorPane.topAnchor="6.0">
               <columnConstraints>
                   <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
                 <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
@@ -122,11 +122,16 @@
                 <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
               </rowConstraints>
             </GridPane>
-            <Label fx:id="labelOut" alignment="CENTER" layoutX="6.0" layoutY="188.0" prefHeight="20.0" prefWidth="150.0" style="-fx-border-color: black;">
+            <Label fx:id="labelOut" alignment="CENTER" layoutX="6.0" layoutY="366.0" prefHeight="50.0" prefWidth="300.0" style="-fx-border-color: black;">
                <font>
                   <Font size="12.0" />
                </font>
             </Label>
+            <Button fx:id="cleanAll" layoutX="6.0" layoutY="421.0" mnemonicParsing="false" onAction="#clearAll" prefHeight="50.0" prefWidth="300.0" style="-fx-background-color: transparent; -fx-border-color: black;" text="Clear">
+               <font>
+                  <Font size="12.0" />
+               </font>
+            </Button>
          </children>
     </AnchorPane>
   </children>
