@@ -4,7 +4,6 @@ import java.util.PriorityQueue;
 
 public class Root {
     public static int sizeOfMat = 3;
-    // bottom, left, top, right
     public static int row[] = { 1, 0, -1, 0 };
     public static int col[] = { 0, -1, 0, 1 };
     ArrayList<Node> nodes = new ArrayList<Node>();
@@ -17,7 +16,7 @@ public class Root {
             System.out.println("");
         }
     }
-    
+
     public Node newNode(int mat[][], int zero_x, int zero_y, int new_zero_x, int new_zero_y, int layer, Node parent) {
         Node node = new Node();
         node.parent = parent;
@@ -28,17 +27,17 @@ public class Root {
                 node.mat[i][j] = mat[i][j];
             }
         }
-        
+
         int temp = node.mat[zero_x][zero_y];
         node.mat[zero_x][zero_y] = node.mat[new_zero_x][new_zero_y];
         node.mat[new_zero_x][new_zero_y]=temp;
-        
-        node.value = Integer.MAX_VALUE;// set number of misplaced tiles
+
+        node.value = Integer.MAX_VALUE;
         node.layer = layer;
-        
+
         node.zero_x = new_zero_x;
         node.zero_y = new_zero_y;
-        
+
         return node;
     }
 
@@ -59,24 +58,24 @@ public class Root {
         return false;
     }
 
-    public void printPath(Node root) {
-        if(root == null) {
+    public void printPath(Node solved) {
+        if(solved == null) {
             return;
         }
-        printPath(root.parent);
-        nodes.add(root);
+        printPath(solved.parent);
+        nodes.add(solved);
     }
     
-    // Comparison object to be used to order the heap
     public class comparator implements Comparator<Node> {
         @Override
-        public int compare(Node lhs, Node rhs) {
-            return (lhs.value + lhs.layer) > (rhs.value+rhs.layer)?1:-1;
+        public int compare(Node node1, Node node2) {
+            return (node1.value + node1.layer) > (node2.value + node2.layer)?1:-1;
         }
     }
 
     public ArrayList<Node> solve(int unsolvedMat[][], int zero_x, int zero_y, int solvedMat[][])
     {
+        int numOfNodes = 0;
         PriorityQueue<Node> priorityQueue = new PriorityQueue<Node>(new comparator());
 
         Node root = newNode(unsolvedMat, zero_x, zero_y, zero_x, zero_y, 0, null);
@@ -90,16 +89,21 @@ public class Root {
 
             if(min.value == 0) {
                 printPath(min);
+                System.out.println("Number of nodes generated: " + numOfNodes);
                 return nodes;
             }
 
-            for (int i = 0; i < 4; i++) {
-                System.out.println("On layer: " + min.layer);
-                if(min.layer > 20) {
-                    return null;
-                }
+            System.out.println("On layer: " + min.layer);
+            if(min.layer > 20) {
+                return null;
+            }
+            if(numOfNodes > 3000000) {
+                return null;
+            }
 
+            for (int i = 0; i < 4; i++) {
                 if (isInMat(min.zero_x + row[i], min.zero_y + col[i])) {
+                    numOfNodes++;
                     Node child = newNode(min.mat, min.zero_x, min.zero_y, min.zero_x + row[i],min.zero_y + col[i], min.layer + 1, min);
                     child.value = getValue(child.mat, solvedMat);
 

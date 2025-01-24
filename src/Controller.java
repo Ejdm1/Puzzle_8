@@ -22,6 +22,7 @@ public class Controller {
 
     @FXML
     private Button generate;
+
     @FXML
     private Button cleanAll;
 
@@ -36,10 +37,6 @@ public class Controller {
     ArrayList<Node> nodes = new ArrayList<Node>();
 
     int unsolvedMat[][] = new int[3][3];
-
-// {1, 2, 3},
-// {5, 6, 0},
-// {7, 8, 4}
 
     public void initialize() {
         generate.setStyle("-fx-font: 15 arial; -fx-border-color: black; -fx-background-color: transparent");
@@ -96,12 +93,28 @@ public class Controller {
         }
     }
 
+// {1, 2, 3},
+// {5, 6, 0},
+// {7, 8, 4}
+
+// {2, 5, 3},
+// {0, 6, 8},
+// {1, 4, 7}
+
+// {8, 4, 5},
+// {0, 2, 6},
+// {3, 7, 1}
+
+// {5, 1, 2},
+// {7, 6, 3},
+// {8, 4, 0}
+
     public void setComboBoxDefault() {
         comboSet = true;
         int unsolvedMat2[][] = {
-            {1, 2, 3},
-            {5, 6, 0},
-            {7, 8, 4} 
+            {5, 1, 2},
+            {7, 6, 3},
+            {8, 4, 0}
         };
         for(int i = 0; i < 3; i++) {
             for(int j = 0; j < 3; j++) {
