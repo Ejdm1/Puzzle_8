@@ -6,6 +6,22 @@ import javafx.fxml.FXMLLoader;
 
 public class App extends Application {
 
+    // {1, 2, 3},
+    // {5, 6, 0},
+    // {7, 8, 4}
+
+    // {2, 5, 3},
+    // {0, 6, 8},
+    // {1, 4, 7}
+
+    // {8, 4, 5},
+    // {0, 2, 6},
+    // {3, 7, 1}
+
+    // {5, 1, 2},
+    // {7, 6, 3},
+    // {8, 4, 0}
+
     public static void main(String[] args) {
         launch(args);
     }

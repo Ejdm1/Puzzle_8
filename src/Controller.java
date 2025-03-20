@@ -5,12 +5,16 @@ import javafx.scene.layout.GridPane;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 import javafx.scene.control.Label;
+import javafx.scene.control.TextField;
 
 import java.util.ArrayList;
 
+import javafx.animation.PauseTransition;
 import javafx.collections.FXCollections;
 import javafx.fxml.FXML;
 import javafx.geometry.Pos;
+
+import javafx.util.Duration;
 
 public class Controller {
 
@@ -32,13 +36,23 @@ public class Controller {
     @FXML
     private GridPane gridInput;
 
+    @FXML
+    private TextField combinationInput;
+
+    @FXML
+    private Button setComboBoxDefault;
+
     Scene scene;
     Stage primaryStage;
     ArrayList<Node> nodes = new ArrayList<Node>();
+    boolean wrongCombination = true;
 
-    int unsolvedMat[][] = new int[3][3];
+    int unsolvedMat[][] = {{9,9,9},{9,9,9},{9,9,9}};
 
     public void initialize() {
+        setComboBoxDefault.setStyle("-fx-font: 15 arial; -fx-border-color: black; -fx-background-color: transparent");
+        combinationInput.setStyle("-fx-font: 15 arial; -fx-border-color: black; -fx-background-color: transparent");
+        combinationInput.setOnKeyTyped(event -> updateMatrix(1));
         generate.setStyle("-fx-font: 15 arial; -fx-border-color: black; -fx-background-color: transparent");
         cleanAll.setStyle("-fx-font: 15 arial; -fx-border-color: black; -fx-background-color: transparent");
         labelOut.setStyle("-fx-font: 15 arial; -fx-border-color: black;");
@@ -52,10 +66,12 @@ public class Controller {
         deleteButtons();
         deleteLabels();
         labelOut.setText("");
+        combinationInput.setText("");
         first = true;
         for(int i = 0; i < 100; i++) {
             for(int j = 0; j < 3; j++) {
                 for(int k = 0; k < 3; k++) {
+                    unsolvedMat[j][k] = 9;
                     try {
                         gridInput.getChildren().remove(scene.lookup("#comboBoxLable" + String.valueOf(j) + String.valueOf(k)));
                     }
@@ -75,24 +91,84 @@ public class Controller {
                     gridInput.getChildren().remove((scene.lookup("#comboBox" + String.valueOf(i) + String.valueOf(j))));
                 }
                 ComboBox<Integer> comboBox = new ComboBox<Integer>();
+                comboBox.setStyle("-fx-font: 20 arial; -fx-border-color: black; -fx-background-color: transparent");
                 comboBox.setPrefSize(100, 100);
                 comboBox.setItems(FXCollections.observableArrayList(0,1,2,3,4,5,6,7,8));
                 comboBox.setId("comboBox" + String.valueOf(i) + String.valueOf(j));
-                comboBox.setOnAction(e -> showSelected(comboBox.getId()));
+                comboBox.setOnAction(event -> updateMatrix(0));
                 gridInput.add(comboBox, j , i);
-                Label label = new Label();
-                label.setId("comboBoxLable" + String.valueOf(i) + String.valueOf(j));
-                label.setMaxSize(98, 98);
-                label.setMinSize(98, 98);
-                label.setText("");
-                label.setStyle("-fx-font: 24 arial; -fx-background-color: white; -fx-border-color: black;");
-                label.setMouseTransparent(true);
-                label.setAlignment(Pos.CENTER);
-                gridInput.add(label, j, i);
             }
         }
     }
 
+    public void updateMatrix(int comboOrText) {
+        if(comboOrText == 0) {
+            boolean isSet = true;
+            for(int i = 0; i < Root.sizeOfMat; i++) {
+                for(int j = 0; j < Root.sizeOfMat; j++) {
+                    if(((ComboBox)(scene.lookup("#comboBox" + String.valueOf(i) + String.valueOf(j)))).getValue() != null) {
+                        unsolvedMat[i][j] = (int)((ComboBox)(scene.lookup("#comboBox" + String.valueOf(i) + String.valueOf(j)))).getValue();
+                    }
+                    else {
+                        isSet = false;
+                    }
+                }
+            }
+            if(isSet) {
+                comboSet = true;
+            }
+        }
+        else if(comboOrText == 1) {
+            int counter = 0;
+            String input = combinationInput.getText();
+            for(int i = 0; i < Root.sizeOfMat; i++) {
+                for(int j = 0; j < Root.sizeOfMat; j++) {
+                    if(input.length() > counter) {
+                        unsolvedMat[i][j] = input.charAt(counter) - '0';
+                        ((ComboBox)(scene.lookup("#comboBox" + String.valueOf(i) + String.valueOf(j)))).setValue(input.charAt(counter) - '0');
+                    }
+                    counter++;
+                }
+            }
+            if(input.length() == 9) {
+                comboSet = true;
+            }
+        }
+        matrixTest();
+        int counter = 0;
+        for(int i = 0; i < 3; i++) {
+            for(int j = 0; j < 3; j++) {
+                System.out.print(unsolvedMat[i][j] + ", ");
+                counter++;
+                if(counter == 3) {System.out.println(); counter = 0;}
+            }
+        }
+    }
+
+    public void matrixTest() {
+        int counter = 0;
+        boolean wrong = false;
+        int comboValues[] = {0,1,2,3,4,5,6,7,8};
+        for(int k = 0; k < 9; k++) {
+            int amount = 0;
+            for(int i = 0; i < 3; i++) {
+                for(int j = 0; j < 3; j++) {
+                    if(unsolvedMat[i][j] == comboValues[counter]) {
+                        amount++;
+                    }
+                    if(unsolvedMat[i][j] == 9) {
+                        wrong = true;
+                    }
+                }
+            }
+            if(amount > 1 || amount == 0) {
+                wrong = true;
+            }
+            counter++;
+        }
+        if(wrong) {wrongCombination = true; labelOut.setText("Wrong combination");}
+        else {wrongCombination = false; labelOut.setText("");}
+    }
 // {1, 2, 3},
 // {5, 6, 0},
 // {7, 8, 4}
@@ -110,7 +186,6 @@ public class Controller {
 // {8, 4, 0}
 
     public void setComboBoxDefault() {
-        comboSet = true;
         int unsolvedMat2[][] = {
             {5, 1, 2},
             {7, 6, 3},
@@ -120,24 +195,11 @@ public class Controller {
             for(int j = 0; j < 3; j++) {
                 ComboBox<Integer> comboBox = (ComboBox<Integer>)(scene.lookup("#comboBox" + String.valueOf(i) + String.valueOf(j)));
                 comboBox.setValue(unsolvedMat2[i][j]);
-                comboBox.setOnAction(e -> showSelected(comboBox.getId()));
-                showSelected("comboBox" + String.valueOf(i) + String.valueOf(j));
             }
         }
-    }
-
-    public void showSelected(String id) {
         comboSet = true;
-        gridInput.getChildren().remove(scene.lookup("#comboBoxLable" + String.valueOf(id.substring(8, 9)) + String.valueOf(id.substring(9, 10))));
-        Label label = new Label();
-        label.setId("comboBoxLable" + String.valueOf(id.substring(8, 9)) + String.valueOf(id.substring(9, 10)));
-        label.setMaxSize(98, 98);
-        label.setMinSize(98, 98);
-        label.setText(String.valueOf(((ComboBox<Integer>)(scene.lookup("#" + id))).getValue()));
-        label.setStyle("-fx-font: 24 arial; -fx-background-color: white; -fx-border-color: black;");
-        label.setAlignment(Pos.CENTER);
-        label.setMouseTransparent(true);
-        gridInput.add(label, Integer.parseInt(id.substring(9, 10)), Integer.parseInt(id.substring(8, 9)));
+        wrongCombination = false;
+        combinationInput.setText("");
     }
 
     // public void deleteComboBoxLabel(String id) {
@@ -146,27 +208,12 @@ public class Controller {
     boolean first = true;
     boolean comboSet = false;
     int solveState = 0; // 1 = unsolvable, 0= solved, -1 = solvable but not by this algorithm
-    public void solveMat(int[][] unsolvedMat) {
+    public void solveMat() {
         int solvedMat[][] = {
             {1, 2, 3},
             {4, 5, 6},
             {7, 8, 0}
         };
-        if(!comboSet) {
-            setComboBoxDefault();
-            if(first) {
-                System.out.print("Default Mat set");first = false;
-            }
-        }
-
-        for(int i = 0; i < Root.sizeOfMat; i++) {
-            for(int j = 0; j < Root.sizeOfMat; j++) {
-                unsolvedMat[i][j] = (int)((ComboBox)(scene.lookup("#comboBox" + String.valueOf(i) + String.valueOf(j)))).getValue();
-                if(first) {System.out.print("Input Mat set"); first = false;}
-            }
-        }
-        first = true;
-        System.out.println("\n");
 
         ArrayList<Integer> pomArr = new ArrayList<Integer>();
 
@@ -213,29 +260,31 @@ public class Controller {
     }
 
     public void solveMatrix() {
-        solveMat(unsolvedMat);
+        solveMat();
     }
 
     public void addButton() {
-        //solveState 1 = unsolvable, 0= solved, -1 = solvable but not by this algorithm
-        solveMatrix();
-        if(solveState == 1) {labelOut.setText("Unsolvable");return;}
-        else if(solveState == -1) {labelOut.setText("Error"); return;}
+        if(!wrongCombination) {
+            //solveState 1 = unsolvable, 0= solved, -1 = solvable but not by this algorithm
+            solveMatrix();
+            if(solveState == 1) {labelOut.setText("Unsolvable");return;}
+            else if(solveState == -1) {labelOut.setText("Error"); return;}
 
-        labelOut.setText("Solved");
-        deleteButtons();
+            labelOut.setText("Solved");
+            deleteButtons();
 
-        for(int i = 0; i < nodes.size(); i++) {
-            Button button = new Button("Layer: " + String.valueOf(nodes.get(i).layer));
-            button.setAlignment(Pos.CENTER);
-            button.setPrefWidth(100);
-            button.setPrefHeight(layerList.getHeight()/10);
-            button.setMinHeight(10);
-            button.setMaxHeight(30);
-            button.setStyle("-fx-font: 15 arial; -fx-background-color: transparent; -fx-border-color: black");
-            button.setId("button" + String.valueOf((i)));
-            button.setOnAction(e -> showLayer(button.getId()));
-            layerList.getChildren().add(button);
+            for(int i = 0; i < nodes.size(); i++) {
+                Button button = new Button("Layer: " + String.valueOf(nodes.get(i).layer));
+                button.setAlignment(Pos.CENTER);
+                button.setPrefWidth(100);
+                button.setPrefHeight(layerList.getHeight()/10);
+                button.setMinHeight(10);
+                button.setMaxHeight(30);
+                button.setStyle("-fx-font: 15 arial; -fx-background-color: transparent; -fx-border-color: black");
+                button.setId("button" + String.valueOf((i)));
+                button.setOnAction(e -> showLayer(button.getId()));
+                layerList.getChildren().add(button);
+            }
         }
     }
 
