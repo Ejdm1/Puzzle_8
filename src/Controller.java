@@ -9,7 +9,9 @@ import javafx.scene.control.TextField;
 
 import java.util.ArrayList;
 
+import javafx.animation.KeyFrame;
 import javafx.animation.PauseTransition;
+import javafx.animation.Timeline;
 import javafx.collections.FXCollections;
 import javafx.fxml.FXML;
 import javafx.geometry.Pos;
@@ -42,12 +44,42 @@ public class Controller {
     @FXML
     private Button setComboBoxDefault;
 
+    @FXML
+    private Button animationButton;
+
+    @FXML
+    private GridPane gridInputDef;
+
+    @FXML
+    private GridPane gridInputAni;
+
+    ComboBox<Integer> defaultVariantIn;
+    ComboBox<Integer> animationSpeed;
+
     Scene scene;
     Stage primaryStage;
     ArrayList<Node> nodes = new ArrayList<Node>();
     boolean wrongCombination = true;
+    int animationCounter = 0;
 
     int unsolvedMat[][] = {{9,9,9},{9,9,9},{9,9,9}};
+    int unsolvedMat2[][][] = {
+        {
+        {5, 1, 2},
+        {7, 6, 3},
+        {8, 4, 0}
+        },
+        {
+        {1, 2, 3},
+        {5, 6, 0},
+        {7, 8, 4}
+        },
+        {
+        {2, 5, 3},
+        {0, 6, 8},
+        {1, 4, 7}
+        },
+    };
 
     public void initialize() {
         setComboBoxDefault.setStyle("-fx-font: 15 arial; -fx-border-color: black; -fx-background-color: transparent");
@@ -56,9 +88,26 @@ public class Controller {
         generate.setStyle("-fx-font: 15 arial; -fx-border-color: black; -fx-background-color: transparent");
         cleanAll.setStyle("-fx-font: 15 arial; -fx-border-color: black; -fx-background-color: transparent");
         labelOut.setStyle("-fx-font: 15 arial; -fx-border-color: black;");
+        animationButton.setStyle("-fx-font: 15 arial; -fx-border-color: black; -fx-background-color: transparent");
 
+        defaultVariantIn = new ComboBox<Integer>();
+        defaultVariantIn.setStyle("-fx-font: 15 arial; -fx-background-color: transparent");
+        defaultVariantIn.setPrefSize(85, 45);
+
+        defaultVariantIn.setOnAction(e -> setComboBoxDefault());
         generate.setOnAction(e -> addButton());
         setComboBox();
+        defaultVariantIn.setItems(FXCollections.observableArrayList(0,1,2));
+        defaultVariantIn.setValue(0);
+        gridInputDef.add(defaultVariantIn, 0, 0);
+
+        animationSpeed = new ComboBox<Integer>();
+        animationSpeed.setStyle("-fx-font: 15 arial; -fx-background-color: transparent");
+        animationSpeed.setPrefSize(85, 45);
+
+        animationSpeed.setItems(FXCollections.observableArrayList(100,300,500,750,1000,2000));
+        animationSpeed.setValue(300);
+        gridInputAni.add(animationSpeed, 0, 0);
     }
 
     public void clearAll() {
@@ -138,9 +187,9 @@ public class Controller {
         int counter = 0;
         for(int i = 0; i < 3; i++) {
             for(int j = 0; j < 3; j++) {
-                System.out.print(unsolvedMat[i][j] + ", ");
+                // System.out.print(unsolvedMat[i][j] + ", ");
                 counter++;
-                if(counter == 3) {System.out.println(); counter = 0;}
+                // if(counter == 3) {System.out.println(); counter = 0;}
             }
         }
     }
@@ -169,32 +218,13 @@ public class Controller {
         if(wrong) {wrongCombination = true; labelOut.setText("Wrong combination");}
         else {wrongCombination = false; labelOut.setText("");}
     }
-// {1, 2, 3},
-// {5, 6, 0},
-// {7, 8, 4}
-
-// {2, 5, 3},
-// {0, 6, 8},
-// {1, 4, 7}
-
-// {8, 4, 5},
-// {0, 2, 6},
-// {3, 7, 1}
-
-// {5, 1, 2},
-// {7, 6, 3},
-// {8, 4, 0}
 
     public void setComboBoxDefault() {
-        int unsolvedMat2[][] = {
-            {5, 1, 2},
-            {7, 6, 3},
-            {8, 4, 0}
-        };
+        int temp = defaultVariantIn.getValue();
         for(int i = 0; i < 3; i++) {
             for(int j = 0; j < 3; j++) {
                 ComboBox<Integer> comboBox = (ComboBox<Integer>)(scene.lookup("#comboBox" + String.valueOf(i) + String.valueOf(j)));
-                comboBox.setValue(unsolvedMat2[i][j]);
+                comboBox.setValue(unsolvedMat2[temp][i][j]);
             }
         }
         comboSet = true;
@@ -202,9 +232,6 @@ public class Controller {
         combinationInput.setText("");
     }
 
-    // public void deleteComboBoxLabel(String id) {
-    //     System.out.println(id);
-    // }
     boolean first = true;
     boolean comboSet = false;
     int solveState = 0; // 1 = unsolvable, 0= solved, -1 = solvable but not by this algorithm
@@ -238,11 +265,11 @@ public class Controller {
         int zero_x = 0, zero_y = 0;
 
         if(inversions % 2 == 1) {
-            System.out.println("Unsolvable");
+            // System.out.println("Unsolvable");
             solveState = 1;
         }
         else {
-            System.out.println("Solvable");
+            // System.out.println("Solvable");
             for(int i = 0; i < 3; i++) {
                 for(int j = 0; j < 3; j++) {
                     if(unsolvedMat[i][j] == 0) {
@@ -255,7 +282,7 @@ public class Controller {
             Root root = new Root();
             nodes = root.solve(unsolvedMat, zero_x, zero_y, solvedMat);
             if(nodes != null) {solveState = 0;}
-            else if (nodes == null) {solveState = -1;System.out.println("solvable but not by this algorithm");}
+            else if (nodes == null) {solveState = -1;}//System.out.println("solvable but not by this algorithm");}
         }
     }
 
@@ -298,8 +325,9 @@ public class Controller {
     }
 
     public void showLayer(String id) {
-        System.out.println("Layer: " + String.valueOf(nodes.get(Integer.parseInt(id.substring(6))).layer));
+        // System.out.println("Layer: " + String.valueOf(nodes.get(Integer.parseInt(id.substring(6))).layer));
         printMatrix(nodes.get(Integer.parseInt(id.substring(6))).mat);
+        animationCounter++;
     }
 
     public void printMatrix(int mat[][]) {
@@ -311,10 +339,27 @@ public class Controller {
                 label.setMaxSize(200, 200);
                 label.setMinSize(200, 200);
                 label.setText(String.valueOf(mat[l][k]));
-                label.setStyle("-fx-font: 40 arial;");
+                if(mat[l][k] == 0) {
+                    label.setStyle("-fx-font: 40 arial; -fx-text-fill: red;");
+                }
+                else {
+                    label.setStyle("-fx-font: 40 arial; -fx-text-fill: black;");
+                }
                 label.setAlignment(Pos.CENTER);
                 gridOutput.add(label, k, l);
             }
+        }
+    }
+
+    public void animation() {
+        if(!wrongCombination && comboSet) {
+            animationCounter = 0;
+            // Create Timeline animation
+            Timeline timeline = new Timeline(
+                new KeyFrame(Duration.millis(animationSpeed.getValue()), e -> showLayer(layerList.getChildren().get(animationCounter).getId()))
+            );
+            timeline.setCycleCount(nodes.size());
+            timeline.play();
         }
     }
 
